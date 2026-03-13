@@ -1,4 +1,4 @@
-#include "Matrix.hpp"
+#include "matrix.hpp"
 #include <chrono>
 
 int main(int argc, char* argv[]) {
@@ -25,6 +25,6 @@ int main(int argc, char* argv[]) {
 
   std::cout << "size: " << n << "x" << n << " | Time: " << time.count() << " ms" << std::endl;
   
-  int check = std::system("python3 verify.py input.txt result.txt");
+  int check = std::system("python3 ../verify.py input.txt result.txt");
   return 0;
 }

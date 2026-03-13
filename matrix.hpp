@@ -4,9 +4,9 @@
 #include <algorithm>
 #include <random>
 
-using namespave std;
+using namespace std;
 
-tempalate <typename T>
+template <typename T>
 class Matrix {
   std::vector<T> arr;
   size_t N;
