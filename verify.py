@@ -1,30 +1,32 @@
 import numpy as np
 import sys
 
-def check():
-    try:
-        # Читаем входные данные
-        with open(sys.argv[1], 'r') as f:
-            n = int(f.readline())
-            data = np.fromstring(f.read(), sep=' ')
-            m1 = data[:n*n].reshape(n, n)
-            m2 = data[n*n:].reshape(n, n)
+def main():
+    if len(sys.argv) < 3:
+        sys.exit(1)
 
-        # Читаем результат C++
-        res_cpp = np.loadtxt(sys.argv[2]).reshape(n, n)
-        
-        # Считаем эталон
-        res_real = np.dot(m1, m2)
+    with open(sys.argv[1], 'r') as f:
+        raw_input = [float(x) for x in f.read().split() if x.lstrip('-').replace('.', '', 1).isdigit()]
+    
+    n = int(np.sqrt(len(raw_input) / 2))
+    
+    a = np.array(raw_input[:n*n]).reshape(n, n)
+    b = np.array(raw_input[n*n:]).reshape(n, n)
 
-        if np.allclose(res_cpp, res_real):
-            print("--- Verification: SUCCESS ---")
-            sys.exit(0)
-        else:
-            print("--- Verification: FAILED ---")
-            sys.exit(1)
-    except Exception as e:
-        print(f"Error during verification: {e}")
+    # 2. Читаем числа из result.txt
+    with open(sys.argv[2], 'r') as f:
+        raw_result = [float(x) for x in f.read().split() if x.lstrip('-').replace('.', '', 1).isdigit()]
+    
+    res_cpp = np.array(raw_result[:n*n]).reshape(n, n)
+
+    expected = np.dot(a, b)
+
+    if np.allclose(res_cpp, expected, atol=1e-5):
+        print("Status - SUCCESS")
+        sys.exit(0)
+    else:
+        print("Status - FAILURE")
         sys.exit(1)
 
 if __name__ == "__main__":
-    check()
+    main()
