@@ -31,4 +31,5 @@ public:
       for (auto& val : arr) val = dist(gen);
     }
   }
+
 }
