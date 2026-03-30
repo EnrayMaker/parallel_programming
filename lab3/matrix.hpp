@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -14,13 +16,14 @@ class Matrix {
 public:
   Matrix(size_t size) : N(size), arr(size * size, 0) {}
 
-  //Чтение из файла
   void loadFromFile(const std::string& filename) {
     std::ifstream in(filename);
     for (auto& val : arr) in >> val;
   }
+  
+  T* get_raw_data() { return arr.data(); }
+  const T* get_raw_data() const { return arr.data(); }
 
-  // Заполнение значениями
   void fillRandom(T min, T max, unsigned int seed) {
     std::mt19937 gen(seed);
     if constexpr (std::is_integral_v<T>) {
