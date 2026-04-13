@@ -7,4 +7,4 @@ find_package(OpenMP REQUIRED)
 
 add_executable(matrix_cuda main.cpp kernel.cu)
 
-target_link_libraries(matrix_cuda PROPERTIES CUDA_SEPARATE_COMPILATION ON)
+set_target_properties(matrix_cuda PROPERTIES CUDA_SEPARATE_COMPILATION ON)

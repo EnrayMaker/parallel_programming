@@ -2,7 +2,7 @@
 #include <iostream>
 
 // Ядро CUDA 
-global void matrixMulKernel(const int* A, const int* B, int* C, int N) {
+__global__ void matrixMulKernel(const int* A, const int* B, int* C, int N) {
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     int col = blockIdx.x * blockDim.x + threadIdx.x;
 
