@@ -1,54 +1,29 @@
 #include "matrix.hpp"
 #include <chrono>
-#include <fstream>
 #include <iostream>
-#include <string>
+
+void runCudaMultiply(const int* h_A, const int* h_B, int* h_C, int N, int blockSize);
 
 int main(int argc, char* argv[]) {
-    size_t n = (argc > 1) ? std::stoul(argv[1]) : 10;
+    size_t n = (argc > 1) ? std::stoul(argv[1]) : 1024;
+    int blockSize = (argc > 2) ? std::stoi(argv[2]) : 16;
 
     Matrix<int> m1(n);
     Matrix<int> m2(n);
-    
-    m1.fillRandom(1, 100, 8);
-    m2.fillRandom(-200, 700, 45);
+    Matrix<int> res(n);
 
-    // Запись входных данных в файл
-    std::ofstream out_in("input.txt");
-    if (out_in.is_open()) {
-        out_in << "matrix A = \n" << m1;
-        out_in << "matrix B = \n" << m2;
-        out_in.close();
-    }
+    m1.fillRandom(1, 10, 8);
+    m2.fillRandom(1, 10, 45);
 
-    // Измерение времени и вычисление
     auto start = std::chrono::high_resolution_clock::now();
-    auto res = m1 * m2;
+
+    runCudaMultiply(m1.get_raw_data(), m2.get_raw_data(), res.get_raw_data(), n, blockSize);
+
     auto end = std::chrono::high_resolution_clock::now();
-    
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    double elapsed_ms = duration.count() / 1000.0;
+    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-    // Запись результата
-    std::ofstream out_res("result.txt");
-    if (out_res.is_open()) {
-        out_res << "Result = \n" << res << "\n";
-        out_res << "Size = " << n << "x" << n << "\n";
-        out_res << "Time = " << elapsed_ms << " ms" << std::endl;
-        out_res.close();
-    }
-
-    std::cout << "Finished Size = " << n << "x" << n << std::endl;
-
-    std::string cmd = "python3 verify.py input.txt result.txt";
-    int check = std::system(cmd.c_str());
-
-    if (check == 0) {
-        std::cout << "Status - Verif Success" << std::endl;
-    } else {
-        std::cout << "Status - Verif Failure" << std::endl;
-    }
+    std::cout << "N: " << n << " | Block: " << blockSize << "x" << blockSize 
+              << " | Time: " << ms << " ms" << std::endl;
 
     return 0;
 }
-
