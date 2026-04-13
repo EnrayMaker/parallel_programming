@@ -20,6 +20,9 @@ public:
     for (auto& val : arr) in >> val;
   }
 
+  T* get_raw_data() { return arr.data(); }
+  const T* get_raw_data() const { return arr.data(); }
+
   // Заполнение значениями
   void fillRandom(T min, T max, unsigned int seed) {
     std::mt19937 gen(seed);
